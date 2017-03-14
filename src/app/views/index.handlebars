@@ -1,0 +1,47 @@
+<h1>
+
+  {{title }}</h1>
+<p>Welcome to {{title }}</p>
+<form>
+  <input name="title" placeholder="Time Title" />
+  <input name="startTime" type="datetime" placeholder="Time Description" />
+  <input name="endTime" type="datetime" placeholder="Time Description" />
+  <button type="submit">Save it</button>
+</form>
+<ul id="result">
+</ul>
+
+<script>
+  //this shouldnt be in the view. Move to own file
+  $(function () {
+    //get starting data
+    $.get('timesheet', function (data) {
+      var text = "";
+      for (i = 0; i < data.length; i++) {
+        text += "<li>" + data[i].title + "</li>";//would be nice to display something more, like start and end
+      }
+      $("#result").html(text);
+    });
+
+
+
+
+    //listen for click event and setup annoymous function
+    $("form").on("submit", function (event) {
+      event.preventDefault();
+      console.log($(this).serialize());
+      
+      $.post("timesheet", $(this).serialize(),function (data) {
+        var text = "";
+
+        for (i = 0; i < data.length; i++) {//repeat loop here to make things simple?
+          text += "<li>" + data[i].title + "</li>";
+        }
+        $("#result").html(text);
+      });
+
+    });
+
+  });
+
+</script>
